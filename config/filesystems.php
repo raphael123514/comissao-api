@@ -77,4 +77,6 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'file_name_json' => env('NAME_FILE_JSON', 'sales'),
+
 ];

@@ -10,7 +10,7 @@ class JsonSaleCommisionRepository implements SaleComissionRepositoryInterface
 {
     protected string $diskName = 'local';
 
-    protected string $fileName = 'sales.json';
+    protected string $fileName = config('filesystems.file_name_json') . '.json';
 
     public function __construct()
     {
