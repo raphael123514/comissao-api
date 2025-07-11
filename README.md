@@ -88,11 +88,11 @@ Após seguir esses passos, a API estará acessível em `http://localhost`.
 Este projeto foi concebido com base na arquitetura **DDD (Domain-Driven Design)**, visando modularidade e manutenibilidade.
 
 * A pasta **`Domain`** contém todas as **entidades** e a lógica de negócio central.
-* Na pasta **`Infrastructure`**, implementamos os **repositórios** para manipulação dos dados (atualmente com foco em manipulação de arquivos JSON) e a lógica para selecionar o tipo de venda utilizando o **padrão de design Strategy**.
+* Na pasta **`Infrastructure`**, implementamos os **repositórios** para manipulação dos dados (atualmente com foco em manipulação de arquivos JSON) e a lógica para selecionar o tipo de venda utilizando o **Design Patterner Strategy**.
 
 ## Resolução de ambiguidade
 
-- Para resolver a ambiguidade no cálculo de comissão, utilizei uma **classe abstrata** que implementa a função principal `calculate()`. Esta função é responsável pelo cálculo da taxa de plataforma (sempre 10% sobre o valor da venda). Ela instancia a entidade `Commissions`, define as informações dos cálculos gerados pela função abstrata `calculateSpecificCommissions()` e retorna a entidade `Sale`.
+- Para resolver a ambiguidade no cálculo de comissão, utilizei uma **classe abstrata** (`AbstractCommissionCalculationStrategy`) que implementa a função principal `calculate()`. Esta função é responsável pelo cálculo da taxa de plataforma (sempre 10% sobre o valor da venda). Ela instancia a entidade `Commissions`, define as informações dos cálculos gerados pela função abstrata `calculateSpecificCommissions()` e retorna a entidade `Sale`.
 As classes filhas (`AffiliateSaleCommissionsStrategy` e `DirectSaleCommissionsStrategy`) implementam a função `calculateSpecificCommissions()` com a lógica específica de comissão para cada tipo de venda, herdando o comportamento comum de `calculate()`.
 
 - Para padronizar o retorno dos dados nos endpoints, especialmente para listar e criar vendas, foi criado um **API Resource** (`SaleResource`). Isso evita código ambíguo e garante uma estrutura de resposta consistente.
