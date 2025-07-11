@@ -11,9 +11,9 @@ class Sale
     public function __construct(private float $valorTotal, private string $tipoVenda, private ?int $id = null)
     {
         if ($valorTotal <= 0) {
-            throw new InvalidArgumentException("O valor total deve ser positivo.");
+            throw new InvalidArgumentException('O valor total deve ser positivo.');
         }
-        if (!in_array($tipoVenda, ['direta', 'afiliada'])) {
+        if (! in_array($tipoVenda, ['direta', 'afiliada'])) {
             throw new InvalidArgumentException("Tipo de venda inválido: {$tipoVenda}. Os tipos permitidos são 'direta' ou 'afiliada'.");
         }
 
@@ -83,6 +83,7 @@ class Sale
                 $data['comissoes']['afiliado'] ?? 0.0
             ));
         }
+
         return $sale;
     }
 }

@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Domain\Sale\Entities;
+
 use InvalidArgumentException;
 
 final class Commissions
 {
-    
-
     public function __construct(private float $plataforma, private float $produtor, private float $afiliado)
     {
         if ($plataforma < 0 || $produtor < 0 || $afiliado < 0) {
-            throw new InvalidArgumentException("Os valores das comissões não podem ser negativos.");
+            throw new InvalidArgumentException('Os valores das comissões não podem ser negativos.');
         }
 
         $this->plataforma = $plataforma;
@@ -48,5 +47,4 @@ final class Commissions
             'afiliado' => $this->afiliado,
         ];
     }
-
 }

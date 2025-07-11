@@ -22,8 +22,8 @@ class SaleCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "valor_total" => "required|numeric|min:0",
-            "tipo_venda" => "required|in:direta,afiliada"
+            'valor_total' => 'required|numeric|min:0',
+            'tipo_venda' => 'required|in:direta,afiliada',
         ];
     }
 }

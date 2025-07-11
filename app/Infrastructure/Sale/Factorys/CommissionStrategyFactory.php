@@ -10,10 +10,7 @@ use InvalidArgumentException;
 
 class CommissionStrategyFactory
 {
-
-    public function __construct(private Container $container)
-    {
-    }
+    public function __construct(private Container $container) {}
 
     // Mapeamento dos tipos de venda para as classes das estratégias
     private array $strategyMap = [
@@ -23,13 +20,12 @@ class CommissionStrategyFactory
 
     /**
      * Retorna a estratégia de cálculo de comissão apropriada para o tipo de venda.
-     * @param string $saleType
-     * @return CommissionCalculationStrategy
+     *
      * @throws InvalidArgumentException
      */
     public function getStrategy(string $saleType): CommissionCalculationStrategy
     {
-        if (!isset($this->strategyMap[$saleType])) {
+        if (! isset($this->strategyMap[$saleType])) {
             throw new InvalidArgumentException("Tipo de venda desconhecido para cálculo de comissão: {$saleType}.");
         }
 

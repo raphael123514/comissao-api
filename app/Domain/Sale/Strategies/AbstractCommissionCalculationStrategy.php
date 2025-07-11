@@ -12,9 +12,9 @@ abstract class AbstractCommissionCalculationStrategy implements CommissionCalcul
     {
         $valorTotal = $sale->getValorTotal();
 
-        $platformCommission = round($valorTotal * 0.10, 2); // 10% para plataforma 
+        $platformCommission = round($valorTotal * 0.10, 2); // 10% para plataforma
 
-        list($producerCommission, $affiliateCommission) = $this->calculateSpecificCommissions($valorTotal);
+        [$producerCommission, $affiliateCommission] = $this->calculateSpecificCommissions($valorTotal);
 
         $commissions = new Commissions($platformCommission, $producerCommission, $affiliateCommission);
         $sale->setCommissions($commissions);
@@ -25,9 +25,9 @@ abstract class AbstractCommissionCalculationStrategy implements CommissionCalcul
     /**
      * Método abstrato que as subclasses devem implementar para fornecer
      * a lógica específica de cálculo de produtor e afiliado.
-     * @param float $valorTotal O valor total da venda.
+     *
+     * @param  float  $valorTotal  O valor total da venda.
      * @return array Um array contendo [producerCommission, affiliateCommission].
      */
     abstract protected function calculateSpecificCommissions(float $valorTotal): array;
-
 }
