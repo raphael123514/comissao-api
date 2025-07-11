@@ -1,3 +1,9 @@
+# Sistema de Gerenciamento de Comissões de Venda
+
+Este projeto é uma API robusta desenvolvida em Laravel para gerenciar e calcular comissões de vendas, abrangendo tanto vendas diretas quanto de afiliados. Com foco em uma arquitetura limpa e escalável, a aplicação utiliza princípios de Domain-Driven Design (DDD) e padrões de projeto para garantir manutenibilidade e clareza no código.
+
+---
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -7,55 +13,139 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Sumário
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Requisitos](#requisitos)
+- [Configuração e Execução](#configuração-e-execução)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Resolução de ambiguidade](#resolução-de-ambiguidade)
+- [Uso da API](#uso-da-api)
+- [Licença](#licença)
+- [Autor](#autor)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tecnologias Utilizadas
 
-## Learning Laravel
+Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Laravel**: Framework PHP robusto para desenvolvimento de aplicações web(versão 12).
+* **PHP**: Linguagem de programação (versão 8.2+ recomendada).
+* **Docker / Laravel Sail**: Para o ambiente de desenvolvimento e orquestração de containers.
+* **Composer**: Gerenciador de dependências para PHP.
+* **JSON FILE**: Arquivo json para armazenamento dos dados.
+* **Git**: Sistema de controle de versão.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requisitos
 
-## Laravel Sponsors
+Para executar este projeto em sua máquina local, você precisará ter instalado:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* **Docker Desktop**: Inclui Docker Engine e Docker Compose.
+* **Git**: Para clonar o repositório.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Configuração e Execução
 
-## Contributing
+Siga os passos abaixo para colocar o projeto em funcionamento usando Laravel Sail:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/raphael123514/comissao-api.git](https://github.com/raphael123514/comissao-api.git)
+    cd comissao-api
+    ```
 
-## Code of Conduct
+2.  **Copie o arquivo de exemplo de ambiente:**
+    ```bash
+    cp .env.example .env
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3.  **Suba os containers com o Sail:**
+    ```bash
+    ./vendor/bin/sail up -d
+    ```
+    *Na primeira execução, isso pode levar alguns minutos enquanto as imagens Docker são baixadas.*
 
-## Security Vulnerabilities
+4.  **Instale as dependências do Composer:**
+    ```bash
+    ./vendor/bin/sail composer install
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5.  **Gere a chave da aplicação:**
+    ```bash
+    ./vendor/bin/sail artisan key:generate
+    ```
+Após seguir esses passos, a API estará acessível em `http://localhost`.
+
+---
+
+## Estrutura do Projeto
+
+Este projeto foi concebido com base na arquitetura **DDD (Domain-Driven Design)**, visando modularidade e manutenibilidade.
+
+* A pasta **`Domain`** contém todas as **entidades** e a lógica de negócio central.
+* Na pasta **`Infrastructure`**, implementamos os **repositórios** para manipulação dos dados (atualmente com foco em manipulação de arquivos JSON) e a lógica para selecionar o tipo de venda utilizando o **padrão de design Strategy**.
+
+## Resolução de ambiguidade
+
+- Para resolver a ambiguidade no cálculo de comissão, utilizei uma **classe abstrata** que implementa a função principal `calculate()`. Esta função é responsável pelo cálculo da taxa de plataforma (sempre 10% sobre o valor da venda). Ela instancia a entidade `Commissions`, define as informações dos cálculos gerados pela função abstrata `calculateSpecificCommissions()` e retorna a entidade `Sale`.
+As classes filhas (`AffiliateSaleCommissionsStrategy` e `DirectSaleCommissionsStrategy`) implementam a função `calculateSpecificCommissions()` com a lógica específica de comissão para cada tipo de venda, herdando o comportamento comum de `calculate()`.
+
+- Para padronizar o retorno dos dados nos endpoints, especialmente para listar e criar vendas, foi criado um **API Resource** (`SaleResource`). Isso evita código ambíguo e garante uma estrutura de resposta consistente.
+
+---
+
+## Uso da API
+
+A API oferece os seguintes endpoints para gerenciamento de vendas:
+
+### Listar histórico de comissão de venda
+
+Retorna uma lista paginada de todos os registros de vendas, incluindo os detalhes das comissões.
+
+```http
+GET /api/sales
+```
+
+### Criar histórico de comissão de venda
+
+Cria um novo registro de venda, calculando automaticamente as comissões com base no tipo de venda fornecido.
+
+```http
+POST /api/sales
+Content-Type: application/json
+
+{
+    "valor_total": 10000,
+    "tipo_venda" : "direta"
+}
+```
+
+* **`valor_total`**: O valor total da venda (obrigatório).
+* **`tipo_venda`**: O tipo da venda ("direta" ou "afiliado") (obrigatório).
+
+### Excluir histórico de comissão de venda
+
+Exclui um registro de venda específico pelo seu ID.
+
+```http
+DELETE /api/sales/1
+```
+* **`1`**: Substitua pelo ID da venda a ser excluída.
+
+---
+
+## Autor
+
+* Raphael Fonseca - https://github.com/raphael123514 | https://www.linkedin.com/in/raphael-fonseca-483980143/
+
+---
 
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
